@@ -179,7 +179,7 @@ function main(ItemInfo,Counts)
     function getsome()
     {
         Goto1(pos.dx,77,-1432)
-        Player.interactions().interact().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+        Player.interactions().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
         JsMacros.waitForEvent("OpenContainer");
         let slot=0;
         let sum=0;
