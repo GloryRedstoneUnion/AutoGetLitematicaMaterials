@@ -3,15 +3,15 @@ const Paths = java.nio.file.Paths;
 const StandardCharsets = java.nio.charset.StandardCharsets;
 //East
 //常量部分
-const EastScanPos = [       //起始点              附着方块位置        层          颜色(侧)
-    { startPos: pos(790,75,-1430), faceOffset: "down", floor: 1 },
-    { startPos: pos(790,76,-1427), faceOffset: "south", floor: 2},
-    { startPos: pos(790,79,-1427), faceOffset: "south", floor: 3 },
-    { startPos: pos(790,83,-1431), faceOffset: "up", floor: 4 },
-    { startPos: pos(790,75,-1434), faceOffset: "down", floor: 1 },
-    { startPos: pos(790,76,-1437), faceOffset: "north", floor: 2 },
-    { startPos: pos(790,79,-1437), faceOffset: "north", floor: 3 },
-    { startPos: pos(790,83,-1433), faceOffset: "up", floor: 4 },
+const EastScanPos = [
+    { startPos: pos(790,75,-1430), faceOffset: {y:74,z:-1428}, floor: 1 },
+    { startPos: pos(790,76,-1427), faceOffset: {y:77,z:-1427}, floor: 2},
+    { startPos: pos(790,79,-1427), faceOffset: {y:80,z:-1427}, floor: 3 },
+    { startPos: pos(790,83,-1431), faceOffset: {y:82,z:-1429}, floor: 4 },
+    { startPos: pos(790,75,-1434), faceOffset: {y:74,z:-1436}, floor: 1 },
+    { startPos: pos(790,76,-1437), faceOffset: {y:77,z:-1437}, floor: 2 },
+    { startPos: pos(790,79,-1437), faceOffset: {y:80,z:-1437}, floor: 3 },
+    { startPos: pos(790,83,-1433), faceOffset: {y:82,z:-1435}, floor: 4 },
 ]
 let facing=1
 blocks = new Map()
@@ -30,14 +30,14 @@ function framefacting(pos1,x,y,z)
             return pos(x,y+1,z);
         case 2:
         {
-            if(pos1.faceOffset=="south")
+            if(pos1.faceOffset.z>-1432)
                 return pos(x,y,z-1);
             else
                 return pos(x,y,z+1);
         }
         case 3:
         {
-            if(pos1.faceOffset=="south")
+            if(pos1.faceOffset.z>-1432)
                 return pos(x,y,z-1);
             else
                 return pos(x,y,z+1);
@@ -64,7 +64,6 @@ function EastscanRow(pos)
     {
         if(itemFrameMap.has(pos2str(framefacting(pos,x,y,z))))//先判断展示框
         {
-            // Chat.log(x+" "+y+" "+z+" "+itemFrameMap.get(pos2str(framefacting(pos,x,y,z))))
             if(itemFrameMap.get(pos2str(framefacting(pos,x,y,z))).getName().getString()!="空气")
                 blocks.set(itemFrameMap.get(pos2str(framefacting(pos,x,y,z))).getName().getString(),{dx:x,dy:y,dz:z,df:(pos.floor),fo:(pos.faceOffset)});
         }
@@ -97,15 +96,15 @@ EastScanPos.forEach(pos => {
 
 
 //West
-const WestScanPos = [       //起始点              附着方块位置        层          颜色(侧)
-    { startPos: pos(764,75,-1434), faceOffset: "down", floor: 1 },
-    { startPos: pos(764,76,-1437), faceOffset: "north", floor: 2},
-    { startPos: pos(764,79,-1437), faceOffset: "north", floor: 3 },
-    { startPos: pos(764,83,-1433), faceOffset: "up", floor: 4 },
-    { startPos: pos(764,75,-1430), faceOffset: "down", floor: 1 },
-    { startPos: pos(764,76,-1427), faceOffset: "south", floor: 2 },
-    { startPos: pos(764,79,-1427), faceOffset: "south", floor: 3 },
-    { startPos: pos(764,83,-1431), faceOffset: "up", floor: 4 },
+const WestScanPos = [
+    { startPos: pos(764,75,-1434), faceOffset: {y:74,z:-1436}, floor: 1 },
+    { startPos: pos(764,76,-1437), faceOffset: {y:77,z:-1437}, floor: 2},
+    { startPos: pos(764,79,-1437), faceOffset: {y:80,z:-1437}, floor: 3 },
+    { startPos: pos(764,83,-1433), faceOffset: {y:82,z:-1435}, floor: 4 },
+    { startPos: pos(764,75,-1430), faceOffset: {y:74,z:-1428}, floor: 1 },
+    { startPos: pos(764,76,-1427), faceOffset: {y:77,z:-1427}, floor: 2 },
+    { startPos: pos(764,79,-1427), faceOffset: {y:80,z:-1427}, floor: 3 },
+    { startPos: pos(764,83,-1431), faceOffset: {y:82,z:-1429}, floor: 4 },
 ]
 facing=-1
 wall=701
@@ -119,7 +118,6 @@ function WestscanRow(pos)
     {
         if(itemFrameMap.has(pos2str(framefacting(pos,x,y,z))))//先判断展示框
         {
-            // Chat.log(x+" "+y+" "+z+" "+itemFrameMap.get(pos2str(framefacting(pos,x,y,z))))
             if(itemFrameMap.get(pos2str(framefacting(pos,x,y,z))).getName().getString()!="空气")
                 blocks.set(itemFrameMap.get(pos2str(framefacting(pos,x,y,z))).getName().getString(),{dx:x,dy:y,dz:z,df:(pos.floor),fo:(pos.faceOffset)});
         }
@@ -170,44 +168,9 @@ let empty=[]
 let clearly=[]
 function getsome(pos,count,Id)
 {
-    // Chat.log(pos.dx+" "+pos.dy+" "+pos.dz+" "+pos.df);
     Goto1(pos.dx,77,-1432)
-    pitch=0;
-    yaw=-180;
-    switch (pos.df)
-    {
-        case 1:
-        {
-            pitch=40.5;
-            break;
-        }
-        case 2:
-        {
-            pitch=12;
-            break;
-        }
-        case 3:
-        {
-            pitch=-20;
-            break;
-        }
-        case 4:
-        {
-            pitch=-55;
-            break;
-        }
-
-    }
-    if(pos.dz>-1432)
-    {
-        yaw=0;
-    }
-    Time.sleep(300)
-    Chat.say("/clook angles "+yaw+" "+pitch)
-    Time.sleep(300)
-    KeyBind.keyBind("key.use",true)
-    KeyBind.keyBind("key.use",false)
-    Time.sleep(500)
+    Player.interactions().interact().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+    JsMacros.waitForEvent("OpenContainer");
     let slot=0;
     let sum=0;
     let slotiteminfo=[]
@@ -216,12 +179,6 @@ function getsome(pos,count,Id)
     hasshulker=0
     while(slot<54)
     {
-        // if(Player.openInventory().getSlot(slot).getCount() && Player.openInventory().getSlot(slot).getName().getString()==Id)
-        // {
-        //     sum+=Player.openInventory().getSlot(slot).getCount();
-        //     Player.openInventory().quick(slot)
-        //     Time.sleep(30)
-        // }
         if(Player.openInventory().getSlot(slot).getItemId().includes("shulker_box") && Player.openInventory().getSlot(slot).getNBT()!=null)
         {
             hasshulker=1;
@@ -296,6 +253,7 @@ catch (e)
 }
 let all=new Map()
 let nofind=[]
+getthings=[]
 for (let i = 0; i < lines.length; i++)
 {
     let line = lines[i].trim();
@@ -307,7 +265,8 @@ for (let i = 0; i < lines.length; i++)
         let second = parts[1];
         if(blocks.has(first))
         {
-            getsome(blocks.get(first),second,first)
+            // getsome(blocks.get(first),second,first)
+            getthings.push({key:blocks.get(first).dx,fs:first,sd:second})
             all.set(first,second)
         }
         else
@@ -316,6 +275,12 @@ for (let i = 0; i < lines.length; i++)
         }
     }
 }
+getthings.sort((a,b) => {
+    return a.key-b.key;
+})
+getthings.forEach(gt => {
+    getsome(blocks.get(gt.fs),gt.sd,gt.fs)
+})
 flag=0
 let cnt=0
 function backing()
@@ -324,17 +289,11 @@ function backing()
     if(!flag)
     {
         flag=1;
-        Chat.say("/clook block 773 76 -1421")
-        Time.sleep(300)
-        KeyBind.keyBind("key.use",true)
-        KeyBind.keyBind("key.use",false)
+        Player.interactions().interactBlock(773,76,-1421,"east",false)
         Time.sleep(2000)
     }
-    Chat.say("/clook angles 90 7.2")
-    Time.sleep(300)
-    KeyBind.keyBind("key.use",true)
-    KeyBind.keyBind("key.use",false)
-    Time.sleep(500)
+    Player.interactions().interactBlock(772,78,-1422,"east",false)
+    JsMacros.waitForEvent("OpenContainer");
     cnt=0
     sm=0
     for(let slot=27;slot<=62 && cnt<=26;slot++)//0~26 27~62
@@ -349,10 +308,7 @@ function backing()
     Player.openInventory().close()
     if(sm>0 && sm<1728)
     {
-        Chat.say("/clook block 773 76 -1421")
-        Time.sleep(300)
-        KeyBind.keyBind("key.use",true)
-        KeyBind.keyBind("key.use",false)
+        Player.interactions().interactBlock(773,76,-1421,"east",false)
         Time.sleep(2000)
     }
     let nw=[]
@@ -366,6 +322,17 @@ function backing()
     {
         getsome(blocks.get(nw[i].id),nw[i].num,nw[i].id)
     }
+    Player.interactions().interactBlock(773,76,-1422,"up",false)
+    JsMacros.waitForEvent("OpenContainer");
+    for(let slot=54;slot<=89;slot++)
+    {
+        if(Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
+        {
+            Player.openInventory().quick(slot)
+            Time.sleep(30)
+        }
+    }
+    Player.openInventory().close()
 }
 while(Player.openInventory().findFreeInventorySlot()==-1)
 {
@@ -378,12 +345,8 @@ if(cnt==27)
     while(cnt==27)
     {
         Time.sleep(2000)
-        Chat.log(2)
-        Chat.say("/clook angles 90 7.2")
-        Time.sleep(300)
-        KeyBind.keyBind("key.use",true)
-        KeyBind.keyBind("key.use",false)
-        Time.sleep(500)
+        Player.interactions().interactBlock(772,78,-1422,"east",false)
+        JsMacros.waitForEvent("OpenContainer");
         cnt=0
         sm=0
         for(let slot=27;slot<=62 && cnt<=26;slot++)//0~26 27~62
@@ -398,19 +361,13 @@ if(cnt==27)
         Player.openInventory().close()
         if(sm>0 && sm<1728)
         {
-            Chat.say("/clook block 773 76 -1421")
-            Time.sleep(300)
-            KeyBind.keyBind("key.use",true)
-            KeyBind.keyBind("key.use",false)
+            Player.interactions().interactBlock(773,76,-1421,"east",false)
             Time.sleep(2000)
         }
     }
 }
-Chat.say("/clook block 773 76 -1422")
-Time.sleep(300)
-KeyBind.keyBind("key.use",true)
-KeyBind.keyBind("key.use",false)
-Time.sleep(500)
+Player.interactions().interactBlock(773,76,-1422,"up",false)
+JsMacros.waitForEvent("OpenContainer");
 for(let slot=54;slot<=89;slot++)
 {
     if(Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
