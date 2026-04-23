@@ -168,9 +168,12 @@ let empty=[]
 let clearly=[]
 function getsome(pos,count,Id)
 {
+    // Time.sleep(100)
+    Chat.log(Id)
     Goto1(pos.dx,77,-1432)
-    Player.interactions().interact().interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
+    Player.interactions().setTarget(pos.dx,pos.fo.y,pos.fo.z).interactBlock(pos.dx,pos.fo.y,pos.fo.z,"down", false)
     JsMacros.waitForEvent("OpenContainer");
+    Chat.log("open")
     let slot=0;
     let sum=0;
     let slotiteminfo=[]
@@ -279,38 +282,78 @@ getthings.sort((a,b) => {
     return a.key-b.key;
 })
 getthings.forEach(gt => {
-    getsome(blocks.get(gt.fs),gt.sd,gt.fs)
+    if(Player.openInventory().findFreeInventorySlot()!=-1)
+    {
+        getsome(blocks.get(gt.fs),gt.sd,gt.fs)        
+    }
+    else
+    {
+        empty.push({id:gt.fs,num:gt.sd})
+    }
 })
 flag=0
-let cnt=0
+let shulkerslot=0
+let sm=0
 function backing()
 {
     Goto1(776,77.06250,-1422)
     if(!flag)
     {
         flag=1;
-        Player.interactions().interactBlock(773,76,-1421,"east",false)
+        Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
         Time.sleep(2000)
     }
-    Player.interactions().interactBlock(772,78,-1422,"east",false)
+    Player.interactions().setTarget(772,78,-1422).interactBlock(772,78,-1422,"east",false)
     JsMacros.waitForEvent("OpenContainer");
-    cnt=0
-    sm=0
-    for(let slot=27;slot<=62 && cnt<=26;slot++)//0~26 27~62
+    for(let slot=27;slot<=62 && shulkerslot<=26;slot++)//0~26 27~62
     {
         if(all.has(Player.openInventory().getSlot(slot).getName().getString()) && !Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
         {
             sm+=Player.openInventory().getSlot(slot).getCount()
             Player.openInventory().quick(slot)
-            cnt++;
+            shulkerslot++;
         }
     }
     Player.openInventory().close()
-    if(sm>0 && sm<1728)
+    if(shulkerslot==27 && sm<1728)
     {
-        Player.interactions().interactBlock(773,76,-1421,"east",false)
+        Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
         Time.sleep(2000)
     }
+    if(sm==1728)
+    {
+        Time.sleep(2000)
+    }
+    Chat.log(shulkerslot)
+    if(shulkerslot==27)
+    {
+        Chat.log(123)
+        shulkerslot=0;
+        sm=0;
+        Player.interactions().setTarget(772,78,-1422).interactBlock(772,78,-1422,"east",false)
+        JsMacros.waitForEvent("OpenContainer");
+        for(let slot=27;slot<=62 && shulkerslot<=26;slot++)//0~26 27~62
+        {
+            if(all.has(Player.openInventory().getSlot(slot).getName().getString()) && !Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
+            {
+                sm+=Player.openInventory().getSlot(slot).getCount()
+                Player.openInventory().quick(slot)
+                shulkerslot++;
+            }
+        }
+        Player.openInventory().close()
+    }
+    Player.interactions().setTarget(773,76,-1422).interactBlock(773,76,-1422,"up",false)
+    JsMacros.waitForEvent("OpenContainer");
+    for(let slot=54;slot<=89;slot++)
+    {
+        if(Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
+        {
+            Player.openInventory().quick(slot)
+            Time.sleep(30)
+        }
+    }
+    Player.openInventory().close()
     let nw=[]
     for(let i=0;i<empty.length;i++)
     {
@@ -322,17 +365,6 @@ function backing()
     {
         getsome(blocks.get(nw[i].id),nw[i].num,nw[i].id)
     }
-    Player.interactions().interactBlock(773,76,-1422,"up",false)
-    JsMacros.waitForEvent("OpenContainer");
-    for(let slot=54;slot<=89;slot++)
-    {
-        if(Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
-        {
-            Player.openInventory().quick(slot)
-            Time.sleep(30)
-        }
-    }
-    Player.openInventory().close()
 }
 while(Player.openInventory().findFreeInventorySlot()==-1)
 {
@@ -340,33 +372,12 @@ while(Player.openInventory().findFreeInventorySlot()==-1)
     backing()
 }
 backing()
-if(cnt==27)
+if(shulkerslot!=0)
 {
-    while(cnt==27)
-    {
-        Time.sleep(2000)
-        Player.interactions().interactBlock(772,78,-1422,"east",false)
-        JsMacros.waitForEvent("OpenContainer");
-        cnt=0
-        sm=0
-        for(let slot=27;slot<=62 && cnt<=26;slot++)//0~26 27~62
-        {
-            if(all.has(Player.openInventory().getSlot(slot).getName().getString()) && !Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
-            {
-                sm+=Player.openInventory().getSlot(slot).getCount()
-                Player.openInventory().quick(slot)
-                cnt++;
-            }
-        }
-        Player.openInventory().close()
-        if(sm>0 && sm<1728)
-        {
-            Player.interactions().interactBlock(773,76,-1421,"east",false)
-            Time.sleep(2000)
-        }
-    }
+    Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
+    Time.sleep(2000)
 }
-Player.interactions().interactBlock(773,76,-1422,"up",false)
+Player.interactions().setTarget(773,76,-1422).interactBlock(773,76,-1422,"up",false)
 JsMacros.waitForEvent("OpenContainer");
 for(let slot=54;slot<=89;slot++)
 {
@@ -386,3 +397,5 @@ for(let i=0;i<nofind.length;i++)
 {
     Chat.logColor("§a"+nofind[i]+"未从物品列表中找到，可能是实体形式或全物品中不存在")
 }
+
+Player.interactions().clearTargetOverride()
