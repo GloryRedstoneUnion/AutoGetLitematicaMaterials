@@ -303,33 +303,13 @@ function backing()
         Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
         Time.sleep(2000)
     }
-    Player.interactions().setTarget(772,78,-1422).interactBlock(772,78,-1422,"east",false)
-    JsMacros.waitForEvent("OpenContainer");
-    for(let slot=27;slot<=62 && shulkerslot<=26;slot++)//0~26 27~62
+    do
     {
-        if(all.has(Player.openInventory().getSlot(slot).getName().getString()) && !Player.openInventory().getSlot(slot).getItemId().includes("shulker_box"))
+        if(shulkerslot==27)
         {
-            sm+=Player.openInventory().getSlot(slot).getCount()
-            Player.openInventory().quick(slot)
-            shulkerslot++;
+            shulkerslot=0;
+            sm=0;
         }
-    }
-    Player.openInventory().close()
-    if(shulkerslot==27 && sm<1728)
-    {
-        Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
-        Time.sleep(2000)
-    }
-    if(sm==1728)
-    {
-        Time.sleep(2000)
-    }
-    Chat.log(shulkerslot)
-    if(shulkerslot==27)
-    {
-        Chat.log(123)
-        shulkerslot=0;
-        sm=0;
         Player.interactions().setTarget(772,78,-1422).interactBlock(772,78,-1422,"east",false)
         JsMacros.waitForEvent("OpenContainer");
         for(let slot=27;slot<=62 && shulkerslot<=26;slot++)//0~26 27~62
@@ -342,7 +322,18 @@ function backing()
             }
         }
         Player.openInventory().close()
+        if(shulkerslot==27 && sm<1728)
+        {
+            Player.interactions().setTarget(773,76,-1421).interactBlock(773,76,-1421,"east",false)
+            Time.sleep(2000)
+        }
+        if(sm==1728)
+        {
+            Time.sleep(2000)
+        }
+        Chat.log(shulkerslot)  
     }
+    while(shulkerslot==27)
     Player.interactions().setTarget(773,76,-1422).interactBlock(773,76,-1422,"up",false)
     JsMacros.waitForEvent("OpenContainer");
     for(let slot=54;slot<=89;slot++)
@@ -363,10 +354,17 @@ function backing()
     empty=[]
     for(let i=0;i<nw.length;i++)
     {
-        getsome(blocks.get(nw[i].id),nw[i].num,nw[i].id)
+        if(Player.openInventory().findFreeInventorySlot()!=-1)
+        {
+            getsome(blocks.get(nw[i].id),nw[i].num,nw[i].id)    
+        }
+        else
+        {
+            empty.push({id:nw[i].id,num:nw[i].num})
+        }
     }
 }
-while(Player.openInventory().findFreeInventorySlot()==-1)
+while(empty.length)
 {
     Chat.log("refinding")
     backing()
