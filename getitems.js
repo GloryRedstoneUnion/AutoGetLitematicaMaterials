@@ -164,6 +164,10 @@ function main(ItemInfo,Counts)
     zz=0.5
     function Goto1(dx,dy,dz)//dx dy dz坐标xx yy zz偏移量
     {
+        if(World.getBlock(dx,dy-1,dz).getId()=="minecraft:shulker_box")
+        {
+            dx++;
+        }
         gb_tt=Player.getPlayer().getPos()
         Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
         while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
